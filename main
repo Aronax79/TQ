@@ -1,0 +1,464 @@
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+Rayfield:LoadConfiguration()
+
+local Window = Rayfield:CreateWindow({
+    Name = "Ms Tools",
+    LoadingTitle = "Mining Simulator Panel",
+    LoadingSubtitle = "by Aronax",
+    ConfigurationSaving = {
+        Enabled = false,
+        FolderName = nil, -- Create a custom folder for your hub/game
+        FileName = "Big Hub"
+    },
+    Discord = {
+        Enabled = false,
+        Invite = "sirius", -- The Discord invite code, do not include discord.gg/
+        RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+    },
+    KeySystem = false, -- Set this to true to use our key system
+    KeySettings = {
+        Title = "Sirius Hub",
+        Subtitle = "Key System",
+        Note = "Join the discord (discord.gg/sirius)",
+        FileName = "SiriusKey",
+        SaveKey = true,
+        GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+        Key = "Hello"
+    }
+})
+
+local AutoFarm = Window:CreateTab("AutoFarm", 4483362458)
+
+local function customtwn(input)
+
+    local TweenService = game:GetService("TweenService")
+    local playing = false
+    local part = Instance.new("Part")
+    part.Position = Vector3.new(0, 10, 0)
+    part.Anchored = true
+    part.Parent = workspace
+    local tweenInfo = TweenInfo.new((game:GetService("Players").LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position -
+                                        Vector3.new(unpack(input))).Magnitude / (60), Enum.EasingStyle.Linear)
+
+    local tween = TweenService:Create(game:GetService("Players").LocalPlayer.Character:WaitForChild("HumanoidRootPart"), tweenInfo, {
+        CFrame = CFrame.new(unpack(input)) * CFrame.new(0, 0, 0)
+    })
+
+    tween:Play()
+    playing = true
+    spawn(function()
+        while playing == true do
+            if game:GetService("Workspace").Ignore:FindFirstChild("Frozen") ~= nil then
+                tween:Cancel()
+            end
+            wait()
+        end
+    end)
+    tween.Completed:wait()
+    playing = false
+end
+
+function tpmedkit()
+    spawn(function()
+        while _G.auto_farm == true do
+            for i, n in pairs(game:GetService("Workspace").Ignore:GetChildren()) do
+                if n.ClassName == "MeshPart" and n.Name == "Medkit" then
+                    local hum = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid")
+                    local root = game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                    while hum == nil and root == nil do
+                        hum = Player.Character:FindFirstChild("Humanoid")
+                        root = Player.Character:FindFirstChild("HumanoidRootPart")
+                        wait()
+                        print("searching for Humanoid")
+
+                    end
+                    n.CanCollide = false
+                    n.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position
+                end
+            end
+            wait(0.1)
+        end
+    end)
+
+end
+
+local function autoStart()
+    spawn(function ()
+        while _G.auto_farm == true do
+            if (game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")) then
+                if (game:GetService("Players").LocalPlayer.PlayerGui.MainGui.MainFrame.Top.StartButton.Visible == true) then
+                    wait(1)
+                    game:GetService("ReplicatedStorage").Dungeon.Remotes.StartDungeon:FireServer()
+                end
+            end
+            wait(0.2)
+        end
+    end)
+    
+end
+local function toggleNoclip(enabled)
+    local player = game:GetService("Players").LocalPlayer
+
+    local noclipEnabled = enabled
+
+    -- Fonction pour activer/désactiver le noclip
+    local function setNoclipState()
+        player.Character.Humanoid:ChangeState(noclipEnabled and Enum.HumanoidStateType.Physics or
+                                                  Enum.HumanoidStateType.GettingUp)
+    end
+
+    -- Désactive le noclip lorsque le personnage est supprimé
+    player.CharacterRemoving:Connect(function()
+        noclipEnabled = false
+    end)
+
+    -- Boucle d'actualisation pour le noclip
+    game:GetService("RunService").Heartbeat:Connect(function()
+        if noclipEnabled then
+            local character = player.Character
+            if character then
+                for _, part in ipairs(character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end
+    end)
+
+    -- Activer ou désactiver le noclip en fonction du paramètre
+    setNoclipState()
+end
+
+function endtp()
+    spawn(function()
+        while _G.auto_farm == true do
+            if (game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")) then
+                if (game:GetService("Players").LocalPlayer.PlayerGui.MainGui.MainFrame.Bottom.DeadCard.Visible == true) then
+                    game:GetService("TeleportService"):Teleport(2960777560, game:GetService("Players").LocalPlayer)
+                    wait(5)
+                end
+            end
+            for i, n in pairs(game:GetService("Workspace"):GetChildren()) do
+                if i == 5 or n.Name == "Dungeon" then
+                    for g, h in pairs(n:GetChildren()) do
+                        if g == 2 then
+                            if (h:FindFirstChild("FinishRoom")) then
+                                _G.tpShrinesDone = false
+                                _G.waitBeforeBoss = false
+                                for e, r in pairs(h.FinishRoom.Hitbox:GetChildren()) do
+                                    if e == 7 then
+                                        print("startEndTween")
+                                        customtwn({r.Position.X, r.Position.Y, r.Position.Z})
+                                        print("DoneEndTween")
+                                    end
+                                end
+                                toggleNoclip(false)
+                                wait(4)
+                                toggleNoclip(true)
+
+                            end
+                        end
+                    end
+                end
+            end
+            wait(1)
+        end
+    end)
+end
+
+function ShrinesSummoners()
+    local count = 0
+    local roomCount = 0
+    for i, n in pairs(
+        game:GetService("Players").Arololptdr.PlayerGui.MainGui.MainFrame.Top.DungeonProgress.Progress:GetChildren()) do
+        if n.Name == "DungeonProgressSlot" then
+            count = count + 1
+        end
+    end
+    for i, n in pairs(game:GetService("Workspace"):GetChildren()) do
+        if i == 5 or n.Name == "Dungeon" then
+            for g, h in pairs(n:GetChildren()) do
+                if g == 2 then
+                    for v, b in pairs(h:GetChildren()) do
+                        roomCount = roomCount + 1
+                    end
+                end
+            end
+        end
+    end
+    if count == roomCount and _G.tpShrinesDone == false and roomCount > 2 then
+        local pos = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position
+        print("startSafeShrineTween")
+            customtwn({pos.X - 100, pos.Y + 30, pos.Z})
+        print("stopSafeShrineTween")
+
+        wait(5)
+        for i, n in pairs(game:GetService("Workspace"):GetChildren()) do
+            if i == 5 or n.Name == "Dungeon" then
+                for g, h in pairs(n:GetChildren()) do
+                    if g == 3 then
+                        for v, b in pairs(h:GetChildren()) do
+                            if b.Primary:FindFirstChild("ProximityPrompt") and b.Name == "Summoning" then
+                                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.R, false, game)
+                                print("startTweenToShrine")
+                                customtwn({pos.X, b.Primary.Position.Y-6, pos.Z})
+                                customtwn({b.Primary.Position.X, b.Primary.Position.Y-6, b.Primary.Position.Z})
+                                print("stopTweenToShrine")
+                                fireproximityprompt(b.Primary.ProximityPrompt, 1, true)
+
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        _G.tpShrinesDone = true
+    end
+end
+function autoAttackCamoflage()
+    --[[spawn(function ()
+
+		while _G.auto_farm == true do
+			local vim = game:GetService('VirtualInputManager')
+			vim:SendMouseButtonEvent(0,0,0,true,game,0)
+			wait()
+			vim:SendMouseButtonEvent(0,0,0,false,game,0)
+			wait(0.05)
+		end
+	end)]] --
+    spawn(function()
+        while _G.auto_farm == true do
+
+            for i, n in pairs(game:GetService("Workspace").Ignore:GetChildren()) do
+                if n.Name == "BlackHole" then
+                    n:destroy()
+                end
+            end
+            wait()
+        end
+    end)
+    spawn(function()
+        while _G.auto_farm == true do
+            for i, n in pairs(game:GetService("Workspace"):GetChildren()) do
+                if i == 5 or n.Name == "Dungeon" then
+                    for g, h in pairs(n:GetChildren()) do
+                        if g == 2 then
+                            if (h:FindFirstChild("BossRoom")) then
+                                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.R, false, game)
+
+                            end
+                        end
+                    end
+                end
+            end
+            wait(0.2)
+        end
+
+    end)
+
+end
+
+local function estObstrue(pointA, pointB, ennemi)
+    local joueur = game.Players.LocalPlayer
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    raycastParams.FilterDescendantsInstances = {joueur.Character, ennemi}
+
+    local raycastResult = workspace:Raycast(pointA, pointB - pointA, raycastParams)
+    return raycastResult ~= nil
+end
+
+local function estEnnemiVisible(ennemi)
+    local joueur = game.Players.LocalPlayer
+
+    local pointA = joueur.Character.Head.Position
+    local pointB = ennemi.Head.Position
+
+    -- Vérifier si l'ennemi est dans la vision du joueur et non obstrué
+    if (pointB - pointA).Magnitude <= joueur.CameraMaxZoomDistance and not estObstrue(pointA, pointB, ennemi) then
+        return true
+    else
+        return false
+    end
+end
+
+-- Vérifier si l'ennemi est visible
+
+_G.auto_farm = false
+_G.tpShrinesDone = false
+_G.waitBeforeBoss = false
+_G.autoclick = false
+
+local autoclick = AutoFarm:CreateToggle({
+    Name = "Toggle autoclick dungeon",
+    CurrentValue = false,
+    Flag = "Toggleautoclick", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Value)
+        _G.autoclick = Value
+        spawn(function ()
+
+            while _G.autoclick == true do
+                local vim = game:GetService('VirtualInputManager')
+                vim:SendMouseButtonEvent(0,0,0,true,game,0)
+                wait()
+                vim:SendMouseButtonEvent(0,0,0,false,game,0)
+                wait(0.05)
+            end
+    end)
+    end
+})
+local noclip = AutoFarm:CreateToggle({
+    Name = "Toggle autofarm dungeon",
+    CurrentValue = false,
+    Flag = "Toggleautofarm", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Value)
+        _G.auto_farm = Value
+        spawn(function()
+            if _G.auto_farm == true then
+                toggleNoclip(true)
+                game:GetService("Workspace").Gravity = 0
+                endtp()
+                tpmedkit()
+                autoAttackCamoflage()
+                autoStart()
+            else
+                toggleNoclip(false)
+                game:GetService("Workspace").Gravity = 196.2
+            end
+            while _G.auto_farm == true do
+                for i, n in pairs(game:GetService("Workspace"):GetChildren()) do
+                    if i == 5 or n.Name == "Dungeon" then
+                        for g, h in pairs(n:GetChildren()) do
+                            if g == 1 then
+                                local closestEnemy
+                                local closestDistance = math.huge
+
+                                for i, enemy in pairs(h:GetChildren()) do
+                                    if enemy:IsA("Model") and enemy:FindFirstChild("EvilHumanoid") and
+                                        enemy:FindFirstChild("HumanoidRootPart") then
+                                        if (enemy.EvilHumanoid.Health > 0) then
+                                            local distance =
+                                                (enemy.HumanoidRootPart.Position -
+                                                    game:GetService("Players").LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).Magnitude
+                                            if distance < closestDistance then
+                                                closestEnemy = enemy
+                                                closestDistance = distance
+                                            end
+                                        end
+
+                                    end
+                                end
+                                for i, enemy in pairs(h:GetChildren()) do
+                                    if enemy:IsA("Model") and enemy:FindFirstChild("EvilHumanoid") and
+                                        enemy:FindFirstChild("HumanoidRootPart")  then
+                                        if (enemy.EvilHumanoid.Health > 0) then
+                                            if enemy:FindFirstChild("EvilHumanoid") and (enemy.Name == "Reaper" or enemy.Name == "Sweetie" or enemy.Name == "Witch" or enemy.Name == "Greenback" or enemy.Name == "Overlord" or enemy.Name == "Star Guardian" or enemy.Name == "Voltage" or enemy.Name == "Blaze" or enemy.Name == "Horseman" or enemy.Name == "Frost" or enemy.Name == "Peppermint") then
+                                                while enemy.EvilHumanoid.Health > 0 do
+                                                    spawn(function ()
+                                                        while enemy.EvilHumanoid.Health > 0 do
+                                                            game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.R, false, game)
+                                                            wait()
+                                                        end
+                                                        
+                                                    end)
+                                                    customtwn({enemy.HumanoidRootPart.Position.X,enemy.HumanoidRootPart.Position.Y+8,enemy.HumanoidRootPart.Position.Z})
+                                                    
+                                                    wait()
+                                                end
+                                               
+                                            elseif enemy:FindFirstChild("EvilHumanoid") and enemy.Name == "Brute" or enemy.Name == "Obsidian" then
+                                                
+                                                while enemy.EvilHumanoid.Health > 0 do
+                                                    spawn(function ()
+                                                        while enemy.EvilHumanoid.Health > 0 do
+                                                            game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.F, false, game)
+                                                            wait()
+                                                        end
+                                                    end)
+                                                    customtwn({enemy.HumanoidRootPart.Position.X-20,enemy.HumanoidRootPart.Position.Y+6,enemy.HumanoidRootPart.Position.Z+2})
+
+                                                end
+                                                
+                                                
+                                            end
+                                        end
+
+                                    end
+                                end
+                                ShrinesSummoners()
+                                print(closestEnemy)
+                                if game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid") and closestEnemy and closestEnemy.Parent then
+									if closestEnemy.EvilHumanoid and closestEnemy.HumanoidRootPart then
+                                        local hp = closestEnemy.EvilHumanoid.Health
+                                        while game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").Health > 0 and hp > 0 and closestEnemy.Parent and _G.auto_farm == true do
+                                            if closestEnemy then
+                                                hp = closestEnemy.EvilHumanoid.Health
+                                            end
+                                            for i, n in pairs(game:GetService("Workspace"):GetChildren()) do
+                                                if i == 5 or n.Name == "Dungeon" then
+                                                    for g, h in pairs(n:GetChildren()) do
+                                                        if g == 2 then
+                                                            if (h:FindFirstChild("BossRoom")) and _G.waitBeforeBoss == false then
+                                                                wait(3)
+                                                                _G.waitBeforeBoss = true
+                                                            end
+    
+                                                        end
+                                                    end
+                                                end
+                                            end
+                                            if closestEnemy:FindFirstChild("HumanoidRootPart") then
+                                                print("startTweenToEnnemy : "..closestEnemy.Name.." Position : "..tostring(closestEnemy.HumanoidRootPart.Position))
+                                                if _G.auto_farm == true and hp > 0 then
+                                                    customtwn({closestEnemy.HumanoidRootPart.Position.X - 20,
+                                                    closestEnemy.HumanoidRootPart.Position.Y + 6,
+                                                    closestEnemy.HumanoidRootPart.Position.Z + 2})
+                                                end
+                                            end
+    
+                                            print("stopTweenToEnnemy")
+                                            for i, n in pairs(game:GetService("Workspace"):GetChildren()) do
+                                                if i == 5 or n.Name == "Dungeon" then
+                                                    for g, h in pairs(n:GetChildren()) do
+                                                        if g == 2 then
+                                                            if (h:FindFirstChild("BossRoom") == nil) then
+                                                                if game:GetService("Players").Arololptdr.PlayerGui.MainGui
+                                                                    .MainFrame.Bottom.PlayerCard.Ability:FindFirstChild(
+                                                                    "AbilityCooldown") == nil then
+                                                                    if closestEnemy.Name ~= "Obsidian" and closestEnemy.Name ~=
+                                                                        "Brute" and closestEnemy and closestEnemy:FindFirstChild("HumanoidRootPart") and hp > 0 then
+                                                                        print("startTweenForAbility")
+                                                                        customtwn(
+                                                                            {closestEnemy.HumanoidRootPart.Position.X,
+                                                                             closestEnemy.HumanoidRootPart.Position.Y,
+                                                                             closestEnemy.HumanoidRootPart.Position.Z})
+                                                                        print("stopTweenForAbility")
+                                                                    end
+    
+                                                                    game:GetService("VirtualInputManager"):SendKeyEvent(
+                                                                        true, Enum.KeyCode.F, false, game)
+                                                                end
+    
+                                                            end
+                                                        end
+                                                    end
+                                                end
+                                            end
+    
+                                            wait()
+                                        end
+                                    end
+
+                                end
+                            end
+                        end
+                    end
+
+                end
+                wait()
+            end
+        end)
+
+    end
+})
