@@ -300,9 +300,9 @@ local autoclick = AutoFarm:CreateToggle({
 
             while _G.autoclick == true do
                 local vim = game:GetService('VirtualInputManager')
-                vim:SendMouseButtonEvent(0,0,0,true,game,0)
+                vim:SendMouseButtonEvent(50,50,0,true,game,0)
                 wait()
-                vim:SendMouseButtonEvent(0,0,0,false,game,0)
+                vim:SendMouseButtonEvent(50,50,0,false,game,0)
                 wait(0.05)
             end
     end)
