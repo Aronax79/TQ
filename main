@@ -38,7 +38,7 @@ local function customtwn(input)
     part.Anchored = true
     part.Parent = workspace
     local tweenInfo = TweenInfo.new((game:GetService("Players").LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position -
-                                        Vector3.new(unpack(input))).Magnitude / (60), Enum.EasingStyle.Linear)
+                                        Vector3.new(unpack(input))).Magnitude / (50), Enum.EasingStyle.Linear)
 
     local tween = TweenService:Create(game:GetService("Players").LocalPlayer.Character:WaitForChild("HumanoidRootPart"), tweenInfo, {
         CFrame = CFrame.new(unpack(input)) * CFrame.new(0, 0, 0)
@@ -340,7 +340,8 @@ local noclip = AutoFarm:CreateToggle({
                                         if (enemy.EvilHumanoid.Health > 0) then
                                             local distance =
                                                 (enemy.HumanoidRootPart.Position -
-                                                    game:GetService("Players").LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).Magnitude
+                                                    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
+                                                        .Position).Magnitude
                                             if distance < closestDistance then
                                                 closestEnemy = enemy
                                                 closestDistance = distance
@@ -427,7 +428,7 @@ local noclip = AutoFarm:CreateToggle({
                                                                     .MainFrame.Bottom.PlayerCard.Ability:FindFirstChild(
                                                                     "AbilityCooldown") == nil then
                                                                     if closestEnemy.Name ~= "Obsidian" and closestEnemy.Name ~=
-                                                                        "Brute" and closestEnemy and closestEnemy:FindFirstChild("HumanoidRootPart") and hp > 0 then
+                                                                        "Brute" and closestEnemy and closestEnemy.HumanoidRootPart and hp > 0 then
                                                                         print("startTweenForAbility")
                                                                         customtwn(
                                                                             {closestEnemy.HumanoidRootPart.Position.X,
