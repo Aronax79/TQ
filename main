@@ -356,17 +356,24 @@ local noclip = AutoFarm:CreateToggle({
                                         if enemy.HumanoidRootPart.Position.Y < 100 and enemy.HumanoidRootPart.Position.Y > -100 then
                                             if (enemy.EvilHumanoid.Health > 0) then
                                                 if enemy:FindFirstChild("EvilHumanoid") and (enemy.Name == "Reaper" or enemy.Name == "Sweetie" or enemy.Name == "Witch" or enemy.Name == "Greenback" or enemy.Name == "Overlord" or enemy.Name == "Star Guardian" or enemy.Name == "Voltage" or enemy.Name == "Blaze" or enemy.Name == "Horseman" or enemy.Name == "Frost" or enemy.Name == "Peppermint") then
-                                                    while enemy.EvilHumanoid.Health > 0 do
-                                                        spawn(function ()
-                                                            while enemy.EvilHumanoid.Health > 0 do
-                                                                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.R, false, game)
-                                                                wait()
-                                                            end
-                                                            
-                                                        end)
-                                                        customtwn({enemy.HumanoidRootPart.Position.X,enemy.HumanoidRootPart.Position.Y+8,enemy.HumanoidRootPart.Position.Z})
-                                                        
-                                                        wait()
+                                                    local health = enemy.EvilHumanoid.Health
+                                                    while health > 0 do
+                                                        if enemy:FindFirstChild("EvilHumanoid") then
+                                                            spawn(function ()
+                                                                while health > 0 do
+                                                                    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.R, false, game)
+                                                                    wait()
+                                                                    if enemy:FindFirstChild("EvilHumanoid") then
+                                                                        health = enemy.EvilHumanoid.Health
+                                                                    end
+                                                                end
+                                                                
+                                                            end)
+                                                            customtwn({enemy.HumanoidRootPart.Position.X,enemy.HumanoidRootPart.Position.Y+8,enemy.HumanoidRootPart.Position.Z})
+
+                                                            wait()
+                                                        end
+
                                                     end
                                                 
                                                 elseif enemy:FindFirstChild("EvilHumanoid") and enemy.Name == "Brute" or enemy.Name == "Obsidian" then
