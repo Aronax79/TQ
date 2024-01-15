@@ -436,7 +436,7 @@ local noclip = AutoFarm:CreateToggle({
                                                                     .MainFrame.Bottom.PlayerCard.Ability:FindFirstChild(
                                                                     "AbilityCooldown") == nil then
                                                                     if closestEnemy.Name ~= "Obsidian" and closestEnemy.Name ~=
-                                                                        "Brute" and closestEnemy and closestEnemy.HumanoidRootPart and hp > 0 then
+                                                                        "Brute" and closestEnemy and closestEnemy:FindFirstChild("HumanoidRootPart") and hp > 0 then
                                                                         print("startTweenForAbility")
                                                                         customtwn(
                                                                             {closestEnemy.HumanoidRootPart.Position.X,
