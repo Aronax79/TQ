@@ -140,7 +140,7 @@ function underwatertp()
 							if h.Underwater:FindFirstChild("UnderwaterTeleporter") then
 								if h.Underwater.UnderwaterTeleporter:FindFirstChild("Start") and _G.teleportedUnderwater == false then
 									local blc = h.Underwater.UnderwaterTeleporter:FindFirstChild("Start")
-									customtwn({blc.Position.X, blc.Position.Y, blc.Position.Z})
+									customtwn({blc.Position.X, blc.Position.Y-4, blc.Position.Z})
 									blc:destroy()
 								end
 							end
