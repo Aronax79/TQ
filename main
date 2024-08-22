@@ -420,7 +420,6 @@ local noclip = AutoFarm:CreateToggle({
                                         end
                                     end
                                 end
-				underwatertp()
                                 ShrinesSummoners()
                                 print(closestEnemy)
                                 if game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid") and closestEnemy and closestEnemy.Parent then
