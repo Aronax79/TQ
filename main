@@ -142,6 +142,7 @@ function underwatertp()
 									local blc = h.Underwater.UnderwaterTeleporter:FindFirstChild("Start")
 									customtwn({blc.Position.X, blc.Position.Y-4, blc.Position.Z})
 									blc:destroy()
+									_G.teleportedUnderwater = true
 								end
 							end
 						end
@@ -420,9 +421,15 @@ local noclip = AutoFarm:CreateToggle({
                                         end
                                     end
                                 end
-				underwatertp()
                                 ShrinesSummoners()
                                 print(closestEnemy)
+				local pointCible = closestEnemy.HumanoidRootPart.Position
+				local positionJoueur = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position
+	        		local distance = (pointCible - positionJoueur).Magnitude
+				
+				if distance > 100 then
+					game:GetService("Players").LocalPlayer.Character.Humanoid.Health = 0
+				end
                                 if game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid") and closestEnemy and closestEnemy.Parent then
 									if closestEnemy.EvilHumanoid and closestEnemy.HumanoidRootPart then
                                         local hp = closestEnemy.EvilHumanoid.Health
