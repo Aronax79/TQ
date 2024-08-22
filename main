@@ -129,7 +129,30 @@ local function toggleNoclip(enabled)
     -- Activer ou désactiver le noclip en fonction du paramètre
     setNoclipState()
 end
-
+function underwatertp()
+    spawn(function()
+	while _G.auto_farm == true do
+		for i, n in pairs(game:GetService("Workspace"):GetChildren()) do
+                	if i == 5 or n.Name == "Dungeon" then
+                    		for g, h in pairs(n:GetChildren()) do
+                        		if g == 2 then
+						if h:FindFirstChild("Underwater") then
+							if h.Underwater:FindFirstChild("UnderwaterTeleporter") then
+								if h.Underwater.UnderwaterTeleporter:FindFirstChild("Start") and _G.teleportedUnderwater == false then
+									local blc = h.Underwater.UnderwaterTeleporter:FindFirstChild("Start")
+									customtwn({blc.Position.X, blc.Position.Y, blc.Position.Z})
+									blc:destroy()
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+		wait(0.2)
+	end
+   end)
+end
 function endtp()
     spawn(function()
         while _G.auto_farm == true do
@@ -146,6 +169,7 @@ function endtp()
                             if (h:FindFirstChild("FinishRoom")) then
                                 _G.tpShrinesDone = false
                                 _G.waitBeforeBoss = false
+				_G.teleportedUnderwater = false
                                 for e, r in pairs(h.FinishRoom.Hitbox:GetChildren()) do
                                     if e == 7 then
                                         print("startEndTween")
@@ -179,7 +203,7 @@ function ShrinesSummoners()
     for i, n in pairs(game:GetService("Workspace"):GetChildren()) do
         if i == 5 or n.Name == "Dungeon" then
             for g, h in pairs(n:GetChildren()) do
-                if g == 2 then
+                if g == 2 or h.Name == "Shrines" then
                     for v, b in pairs(h:GetChildren()) do
                         roomCount = roomCount + 1
                     end
@@ -193,7 +217,7 @@ function ShrinesSummoners()
             customtwn({pos.X - 100, pos.Y + 30, pos.Z})
         print("stopSafeShrineTween")
 
-        wait(5)
+        wait(1)
         for i, n in pairs(game:GetService("Workspace"):GetChildren()) do
             if i == 5 or n.Name == "Dungeon" then
                 for g, h in pairs(n:GetChildren()) do
@@ -289,6 +313,7 @@ _G.auto_farm = false
 _G.tpShrinesDone = false
 _G.waitBeforeBoss = false
 _G.autoclick = false
+_G.teleportedUnderwater = false
 
 local autoclick = AutoFarm:CreateToggle({
     Name = "Toggle autoclick dungeon",
@@ -395,6 +420,7 @@ local noclip = AutoFarm:CreateToggle({
                                         end
                                     end
                                 end
+				underwatertp()
                                 ShrinesSummoners()
                                 print(closestEnemy)
                                 if game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid") and closestEnemy and closestEnemy.Parent then
